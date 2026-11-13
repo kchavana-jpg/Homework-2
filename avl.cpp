@@ -2,21 +2,21 @@
 #include "avl.h"
 
 int nodeHeight(const Node* node) {
-    (void)node;
-    return 0;
-} // TODO
-
+    return node ? node->height : 0;
+}
 void updateHeight(Node* node) {
-    (void)node;
-} // TODO
+    int leftH = nodeHeight(node->left);
+    int rightH = nodeHeight(node->right);
+    node->height = 1 + (leftH > rightH ? leftH : rightH)
+}
 
 int balanceFactor(const Node* node) {
-    (void)node;
-    return 0;
+    return node 
+    node->left - node->right
 } // TODO
 
 Node* rotateLeft(Node* root) {
-    return root;
+    
 } // TODO
 
 Node* rotateRight(Node* root) {
