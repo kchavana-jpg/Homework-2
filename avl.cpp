@@ -51,31 +51,69 @@ Node* rebalance(Node* root) {
 }
 
 Node* insertNode(Node* root, Node* newNode) {
-    if () ;
+    if (!root)
+        return newNode;
+    if (newNode->data.departure < root->data.departure)
+        root->left = insertNode(root->left, newNode);
+    else if (newNode->data.departure > root->data.departure)
+        root->right = insertNode(root->right, newNode);
+    return rebalance(root);
 }
 
 Node* deleteNode(Node* root, int departure) {
-    (void)departure;
-    return root; // TODO
+    if (!root)
+        return nullptr;
+    if (departure < root->data.departure) {
+        root->left = deleteNode(root->left, departure);
+    } else if (departure > root->data.departure) {
+        root->right = deleteNode(root->right, departure);
+    } else {
+        if (!root->left || !root->right) {
+            Node* child = root->left ? root->left : root->right;
+            delete root;
+            return child;
+        }
+        Node* succ = root->right;
+        while (succ->left)
+            succ = succ->left;
+        root->data = succ->data;
+        root->right = deleteNode(root->right, succ->data.departure);
+    }
+    return rebalance(root);
 }
 
 const Node* findNode(const Node* root, int departure) {
-    (void)root;
-    (void)departure;
-    return nullptr; // TODO
+    const Node* curr = root;
+    while (curr) {
+        if (departure == curr->data.departure)
+            return curr;
+        curr = (departure < curr->data.departure) ? curr->left : curr->right;
+    }
+    return nullptr;
 }
 
 const Node* earliestNode(const Node* root, int departure) {
-    (void)root;
-    (void)departure;
-    return nullptr; // TODO
+    const Node* best = nullptr;
+    const Node* curr = root;
+    while (curr) {
+        if (curr->data.departure >= departure) {
+            best = curr;
+            curr = curr->left;
+        } else {
+            curr = curr->right;
+        }
+    }
+    return best;
 }
 
 void findRange(const Node* root, int start, int end,
                const Node* results[], int& count) {
-    (void)root;
-    (void)start;
-    (void)end;
-    (void)results;
-    (void)count; // TODO
+    if (!root || start > end)
+        return;
+    if (root->data.departure > start)
+        findRange(root->left, start, end, results, count);
+    if (root->data.departure >= start && root->data.departure <= end)
+        results[count++] = root;
+    if (root->data.departure < end)
+        findRange(root->right, start, end, results, count);
 }
