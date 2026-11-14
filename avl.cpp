@@ -7,29 +7,51 @@ int nodeHeight(const Node* node) {
 void updateHeight(Node* node) {
     int leftH = nodeHeight(node->left);
     int rightH = nodeHeight(node->right);
-    node->height = 1 + (leftH > rightH ? leftH : rightH)
+    node->height = 1 + (leftH > rightH ? leftH : rightH);
 }
 
 int balanceFactor(const Node* node) {
-    return node 
-    node->left - node->right
-} // TODO
+    return node ? nodeHeight(node->left) - nodeHeight(node->right) : 0;
+} 
 
 Node* rotateLeft(Node* root) {
-    
-} // TODO
+    Node* newRoot = root->right;
+    root->right = newRoot->left;
+    newRoot->left = root;
+    updateHeight(root);
+    updateHeight(newRoot);
+    return newRoot;
+}
 
 Node* rotateRight(Node* root) {
-    return root;
-} // TODO
+    Node* newRoot = root->left;
+    root->left = newRoot->right;
+    newRoot->right = root;
+    updateHeight(root);
+    updateHeight(newRoot);
+    return newRoot;
+}
 
 Node* rebalance(Node* root) {
+    if (!root)
+        return nullptr;
+    updateHeight(root);
+    int bf = balanceFactor(root);
+    if (bf > 1) {
+        if (balanceFactor(root->left) < 0)
+            root->left = rotateLeft(root->left);
+        return rotateRight(root);
+    }
+    if (bf < -1) {
+        if (balanceFactor(root->right) > 0)
+            root->right = rotateRight(root->right);
+        return rotateLeft(root);
+    }
     return root;
-} // TODO
+}
 
 Node* insertNode(Node* root, Node* newNode) {
-    (void)newNode;
-    return root; // TODO
+    if () ;
 }
 
 Node* deleteNode(Node* root, int departure) {
